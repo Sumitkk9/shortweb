@@ -3,7 +3,7 @@ import axios from "axios";
 export const Apihandlerpost = async(formdata,mainurl,head)=>{
     const token = localStorage.getItem("accessToken");
     try {
-        const response = await axios.post('http://localhost:3000/api/v1/users'+mainurl,formdata,  { 
+        const response = await axios.post('https://backend-phi-ecru-27.vercel.app/api/v1/users'+mainurl,formdata,  { 
              headers: head && {
             Authorization:`Bearer ${token}`,
           },
@@ -30,7 +30,7 @@ export const Apihandlerget = async(mainurl,head)=>{
     const token = localStorage.getItem("accessToken");
 
     try {
-        const response = await axios.get('http://localhost:3000/api/v1' + mainurl, { 
+        const response = await axios.get('https://backend-phi-ecru-27.vercel.app/api/v1' + mainurl, { 
             headers: head && token ? { Authorization: `Bearer ${token}` } : {},
         });
     const data =  response.data.data
@@ -44,7 +44,7 @@ export const Apihandlerget = async(mainurl,head)=>{
 export const Apihandlerlogout = async()=>{
     const token = localStorage.getItem("accessToken");
     try {
-        const response = await axios.post('http://localhost:3000/api/v1/users/logout',{}, { 
+        const response = await axios.post('https://backend-phi-ecru-27.vercel.app/api/v1/users/logout',{}, { 
         headers: {
         Authorization:`Bearer ${token}`,
       },
@@ -65,7 +65,7 @@ export const Apihandlerlogout = async()=>{
 export const ApihandlerUpload = async(formdata)=>{
     const token = localStorage.getItem("accessToken");
     try {
-        const response = await axios.post('http://localhost:3000/api/v1/video/video-upload',formdata, { 
+        const response = await axios.post('https://backend-phi-ecru-27.vercel.app/api/v1/video/video-upload',formdata, { 
         headers: {
         Authorization:`Bearer ${token}`,
       },
