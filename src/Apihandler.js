@@ -31,7 +31,7 @@ export const Apihandlerget = async(mainurl,head)=>{
 
     try {
         const response = await axios.get('http://localhost:3000/api/v1' + mainurl, { 
-            headers: head ? { Authorization: `Bearer ${token}` } : {},
+            headers: head && token ? { Authorization: `Bearer ${token}` } : {},
         });
     const data =  response.data.data
      return  data

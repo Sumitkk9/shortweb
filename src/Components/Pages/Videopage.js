@@ -12,7 +12,7 @@ import { Apihandlerget,Apihandlerpost } from '../../Apihandler';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Share } from '@mui/icons-material';
 import { useAlert } from "../UI/Alertui";
-
+import { Auth } from '../../auth';
 export default function Videopage() {
 const {showAlert } = useAlert()
 const params = useParams()
@@ -26,11 +26,15 @@ const [subDisabled,setSubDisabled] = React.useState(false)
   React.useEffect(()=>{
     setLocalData(JSON.parse(localStorage.getItem("user")))
     getData()
-  },[subDisabled])
+  },[subDisabled,localStorage.getItem("user")])
 
   const getData = async ()=>{
     setLoading(true)
     const response = await Apihandlerget(`/video/watch/${videoId}`,true)
+
+    setTimeout(() => {
+      const views =  Apihandlerget(`/video/${videoId}`,false)
+    }, 5000);
     setVideoData(response)
     setLoading(false)
    
@@ -38,7 +42,11 @@ const [subDisabled,setSubDisabled] = React.useState(false)
 
   const subsFn = async ()=>{
     setSubDisabled(true)
-
+    if(!Auth()){
+      showAlert("Login Required","error"  )
+      setSubDisabled(false)
+      return
+    }
     const sub = await Apihandlerget(videoData?.subscribed? `/channel/unsubscribe/${videoData?.ownerdetails?._id}` :
       `/channel/subscribe/${videoData?.ownerdetails?._id}`,true)
 

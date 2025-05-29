@@ -7,31 +7,14 @@ import Typography from '@mui/joy/Typography';
 import { Apihandlerget } from '../../Apihandler';
 import { useEffect,useState,useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Avatar, Stack } from '@mui/material';
 
-export default function MediaCover() {
+export default function MediaCover({videos,avatar,username}) {
     const videoRef = useRef(null);
     const navigate = useNavigate()
-    const [videos,setVideo] = useState()
+
     const [play,setPlay] = useState(false)
-
-useEffect(()=>{
-    getVideo()
-},[])
-    const getVideo = async()=>{
-        const response = await Apihandlerget("/video/allvideos")
-        setVideo(response)
-
-    }
-    const handleMouseEnter = () => {
-        setPlay(true);
-        console.log("play")
-       
-      };
-    
-      const handleMouseLeave = () => {
-        setPlay(false);
-        console.log("stop")
-      };
+  
   return (
     <Box
    
@@ -49,7 +32,7 @@ useEffect(()=>{
           ref={videoRef}
           // onMouseEnter={handleMouseEnter}
           // onMouseLeave={handleMouseLeave}
-            autoPlay
+            autoPlay={username? false:true}
             playsInline
             loop
             muted
@@ -62,20 +45,47 @@ useEffect(()=>{
           </video>
         </CardCover>
         <CardContent>
+          
           <Typography
             level="body-lg"
             textColor="#fff"
             sx={{ fontWeight: 'lg', mt: { xs: 12, sm: 18 } }}
           >
-            {video.title}
+            {(video?.title).slice(0,40)}{video?.title.length>40 &&"..."}
+          </Typography>
+          
+        
+          <Stack direction={"row"} sx={{alignItems:"center",zIndex:10}} spacing={2}>
+          <Avatar 
+          onClick={(e)=>{
+            e.stopPropagation();
+            navigate(`/channel/${video?.ownerdetails.username}`)
+          }} 
+          alt='hello' 
+          src={video?.ownerdetails?.avatar || avatar} />
+          <Stack direction={"column"}>
+          <Typography
+           onClick={(e)=>{
+            e.stopPropagation();
+            navigate(`/channel/${video?.ownerdetails.username}`)
+          }} 
+            level="body-lg"
+            textColor="#fff"
+            sx={{ fontWeight: 'lg',fontSize:"0.8rem"}}
+          >
+            @{video?.ownerdetails?.username || username}
           </Typography>
           <Typography
             level="body-lg"
             textColor="#fff"
-            sx={{ fontWeight: 'lg',fontSize:"0.7rem"}}
+            sx={{ fontWeight: 'lg',fontSize:"0.6rem"}}
           >
-            {video.createdAt.split("T")[0]}
+            {video.createdAt.split("T")[0]} · {video?.views} Views
           </Typography>
+          </Stack>
+         
+          </Stack>
+        
         </CardContent>
       </Card>
 )}

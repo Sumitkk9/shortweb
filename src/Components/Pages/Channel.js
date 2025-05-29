@@ -9,9 +9,14 @@ import { useEffect,useState,useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { AspectRatio, Sheet } from '@mui/joy';
-
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import VideoCard from '../UI/VideoCard';
 
 export default function Channel() {
+
     const videoRef = useRef(null);
     const params = useParams()
     const [videos,setVideo] = useState()
@@ -19,9 +24,9 @@ export default function Channel() {
     const username = params.username || null
     const localData =  JSON.parse(localStorage.getItem("user"))
 
-useEffect(()=>{ 
-    getVideo()
-},[])
+    useEffect(()=>{ 
+        getVideo()
+    },[username])
     const getVideo = async()=>{
 
         const response = await Apihandlerpost({},`/channel/${username}`,true)
@@ -30,6 +35,11 @@ useEffect(()=>{
 
     }
     console.log(videos)
+    const [value, setValue] = useState('1');
+
+    const handleChange = (event, newValue) => {
+      setValue(newValue);
+    };
   return (
     <Box
    
@@ -89,7 +99,7 @@ useEffect(()=>{
               <Typography level="body-xs" sx={{ fontWeight: 'lg' }}>
                 Videos
               </Typography>
-              <Typography sx={{ fontWeight: 'lg' }}>0</Typography>
+              <Typography sx={{ fontWeight: 'lg' }}>{videos?.allvideos.length}</Typography>
             </div>
             <div>
               <Typography level="body-xs" sx={{ fontWeight: 'lg' }}>
@@ -114,7 +124,20 @@ useEffect(()=>{
       </Card>
         </CardContent>
       </Card>
-
+      <Box sx={{ width: '100%', typography: 'body1' }}>
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <TabList onChange={handleChange} aria-label="lab API tabs example">
+            <Tab label="Videos" value="1" />
+            <Tab label="Posts" value="2" />
+          </TabList>
+        </Box>
+        <TabPanel value="1">
+          {<VideoCard videos={videos?.allvideos} avatar={videos?.avatar} username={videos?.username}/>}
+          </TabPanel>
+        <TabPanel value="2">Coming soon</TabPanel>
+      </TabContext>
+    </Box>
     </Box>
   );
 }

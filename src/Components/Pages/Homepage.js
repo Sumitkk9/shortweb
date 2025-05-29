@@ -13,6 +13,8 @@ import VideoCard from '../UI/VideoCard';
 import { AlertProvider } from '../UI/Alertui';
 import Videopage from './Videopage';
 import Channel from './Channel';
+import { Apihandlerget } from '../../Apihandler';
+import SearchPage from './SearchPage';
 
 
 
@@ -26,6 +28,18 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export default function Homepage() {
+    const [videos,setVideo] = React.useState()
+
+   const getVideo = async()=>{
+          const response = await Apihandlerget("/video/allvideos")
+          setVideo(response)
+  
+      }
+
+      React.useEffect(()=>{
+        getVideo()
+      },[])
+     
   const theme = useTheme();
   const iSmall = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -57,9 +71,10 @@ export default function Homepage() {
         <DrawerHeader />
     {/* <Header/> */}
       <Routes>
-        <Route path='/' element={<VideoCard/>}/>
+        <Route path='/' element={<VideoCard videos={videos}/>}/>
         <Route path='/watch/:id' element={<Videopage/>}/>
         <Route path='/channel/:username' element={<Channel/>}/>
+        <Route path='/search/:input' element={<SearchPage/>}/>
       
         {/* protected route */}
         <Route 
